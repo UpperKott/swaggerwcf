@@ -109,6 +109,7 @@ namespace SwaggerWcf.Support
             service.Paths = new List<Path>();
 
             var types = GetAssemblyTypes(hiddenTags);
+
             var useBasePathProperty = types.Select(t => t.GetCustomAttribute<SwaggerWcfAttribute>().ServicePath)
                                    .Distinct()
                                    .Count() == 1;
@@ -163,7 +164,16 @@ namespace SwaggerWcf.Support
 
                 foreach (TypeInfo ti in types)
                 {
-                    var da = ti.GetCustomAttribute<SwaggerWcfAttribute>();
+                    SwaggerWcfAttribute da;
+                    try
+                    {
+                        da = ti.GetCustomAttribute<SwaggerWcfAttribute>();
+                    }
+                    catch (Exception)
+                    {
+                        continue;
+                    }
+                    
                     if (da == null || hiddenTags.Any(ht => ht == ti.AsType().Name))
                         continue;
 

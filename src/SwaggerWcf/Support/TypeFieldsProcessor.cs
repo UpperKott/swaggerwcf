@@ -54,9 +54,12 @@ namespace SwaggerWcf.Support
                     if (schema.Required == null)
                         schema.Required = new List<string>();
 
-                    schema.Required.Add(prop.Title);
+                    if (!schema.Required.Contains(prop.Title))
+                        schema.Required.Add(prop.Title);
                 }
-                schema.Properties.Add(prop);
+
+                if (schema.Properties.All(p => p.Title != prop.Title))
+                    schema.Properties.Add(prop);
             }
         }
 

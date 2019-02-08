@@ -54,16 +54,20 @@ namespace SwaggerWcf.Support
                     if (schema.Required == null)
                         schema.Required = new List<string>();
 
-                    schema.Required.Add(prop.Title);
+                    if (!schema.Required.Contains(prop.Title))
+                        schema.Required.Add(prop.Title);
                 }
-                schema.Properties.Add(prop);
+
+                if (schema.Properties.All(p => p.Title != prop.Title))
+                    schema.Properties.Add(prop);
             }
         }
 
         private static DefinitionProperty ProcessProperty(PropertyInfo propertyInfo, IList<string> hiddenTags,
                                                           Stack<Type> typesStack)
         {
-            if (propertyInfo.GetCustomAttribute<SwaggerWcfHiddenAttribute>() != null
+            if (propertyInfo.PropertyType == typeof(Exception)
+                || propertyInfo.GetCustomAttribute<SwaggerWcfHiddenAttribute>() != null
                 || propertyInfo.GetCustomAttributes<SwaggerWcfTagAttribute>()
                                .Select(t => t.TagName)
                                .Any(hiddenTags.Contains))

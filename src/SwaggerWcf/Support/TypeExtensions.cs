@@ -20,7 +20,13 @@ namespace SwaggerWcf.Support
         }
 
         public static string GetModelName(this Type type) =>
-            type.GetCustomAttribute<SwaggerWcfDefinitionAttribute>()?.ModelName ?? type.FullName;
+            type.GetCustomAttribute<SwaggerWcfDefinitionAttribute>()?.ModelName ?? type.FullName.Replace("[", "_")
+                .Replace("]", "_")
+                .Replace(",", "-")
+                .Replace("=", "-")
+                .Replace("`", "_")
+                .Replace("+", "_")
+                .Replace(" ", "");
 
         public static string GetModelWrappedName(this Type type) =>
             type.GetCustomAttribute<SwaggerWcfDefinitionAttribute>()?.ModelName ?? type.FullName;
